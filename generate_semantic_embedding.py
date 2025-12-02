@@ -4,7 +4,6 @@ import json
 import numpy as np
 
 
-# 경로는 필요에 맞게 수정해서 사용하세요
 HPO_EMB_CSV = "data/hpo_omim_embedding.csv"
 PHENOTYPE_HPOA = "data/phenotype.hpoa"
 OMIM_ID_TXT = "data/omim_ids.txt"
@@ -29,7 +28,6 @@ def load_hpo_embeddings(hpo_emb_csv_path: str) -> dict:
     for _, row in df.iterrows():
         hpo_id = row["HPO_id"] 
         emb_str = row["emb"]
-        # "[a, b, c, ...]" 문자열을 list[float]로 파싱
         vec = ast.literal_eval(emb_str)
         hpo_to_vec[hpo_id] = vec
 
@@ -37,10 +35,6 @@ def load_hpo_embeddings(hpo_emb_csv_path: str) -> dict:
 
 
 def load_phenotype_hpoa(phenotype_path: str) -> pd.DataFrame:
-    """
-    phenotype.hpoa 파일을 읽어서 DataFrame으로 반환.
-    주석(#) 라인은 무시하고, 탭 구분자로 읽는다.
-    """
     df = pd.read_csv(
         phenotype_path,
         sep="\t",
@@ -57,10 +51,6 @@ def load_phenotype_hpoa(phenotype_path: str) -> pd.DataFrame:
 
 
 def load_target_omim_ids(txt_path: str) -> list:
-    """
-    OMIM ID 리스트 파일을 읽는다.
-    각 줄에 하나씩:  예) OMIM:619340
-    """
     omim_ids = []
     with open(txt_path, "r") as f:
         for line in f:
@@ -86,9 +76,8 @@ def build_omim_semantic_embeddings(
         # annotation된 HPO term들 (중복 제거)
         hpo_ids = df_sub["hpo_id"].dropna().unique().tolist()
 
-        # 해당 OMIM ID에 annotation이 전혀 없으면 스킵 (원하면 빈 것도 포함 가능)
         if len(hpo_ids) == 0:
-            # rows.append({"omim_id": omim_id, "hpo_ids": "[]", "emb": "[]"})
+            print(f"{hpo_ids} annotation 없습니다!!!")
             continue
 
         # HPO term 임베딩 모으기
@@ -100,8 +89,8 @@ def build_omim_semantic_embeddings(
                 emb_list.append(vec)
                 used_hpo_ids.append(hpo_id)
 
-        # 해당 OMIM ID의 HPO term 중에서 임베딩이 하나도 없으면 스킵
         if len(emb_list) == 0:
+            print(f"{hpo_id} annotation은 있는데 embedding 잆습니다!!!")
             continue
 
         # JSON 문자열로 저장 (나중에 쉽게 파싱 가능)
@@ -138,15 +127,7 @@ def build_omim_pooled_embeddings(
     omim_ids: list,
     pooling: str = "mean",
 ) -> pd.DataFrame:
-    """
-    주어진 omim_ids 에 대해,
-    phenotype.hpoa 로부터 annotation된 HPO term을 찾고,
-    각 HPO term의 임베딩을 pooling 해서 (64,) 벡터 하나로 만든다.
 
-    반환 DataFrame 컬럼:
-        omim_id : OMIM:xxxxx
-        emb     : "[...64 floats...]" 문자열
-    """
     rows = []
 
     for omim_id in omim_ids:
@@ -155,7 +136,7 @@ def build_omim_pooled_embeddings(
         hpo_ids = df_sub["hpo_id"].dropna().unique().tolist()
 
         if len(hpo_ids) == 0:
-            print(f"{hpo_ids} annotation 없음!!!")
+            print(f"{hpo_ids} annotation 없습니다!!!")
             continue
 
         emb_list = []
@@ -165,7 +146,7 @@ def build_omim_pooled_embeddings(
                 emb_list.append(vec)
 
         if len(emb_list) == 0:
-            print(f"{hpo_id} annotation은 있는데 embedding 잆음!!!")
+            print(f"{hpo_id} annotation은 있는데 embedding 잆습니다!!!")
             continue
 
         pooled_vec = pool_embeddings(emb_list, mode=pooling)  # (64,)
@@ -176,25 +157,22 @@ def build_omim_pooled_embeddings(
     return pd.DataFrame(rows)
 
 def main():
-    # 1. HPO term 임베딩 로드 (HP:xxxx -> [64차원 벡터])
     hpo_to_vec = load_hpo_embeddings(HPO_EMB_CSV)
 
-    # 2. phenotype.hpoa 로드 (OMIM:xxxx, HP:xxxx 매핑)
     phenotype_df = load_phenotype_hpoa(PHENOTYPE_HPOA)
 
-    # 3. 대상 OMIM ID 리스트 로드
     omim_ids = load_target_omim_ids(OMIM_ID_TXT)
 
 
     if POOLING =="no":
-        # 선택) 4-1. OMIM ID마다 semantic embedding 생성 -> 모든 term embedding stack함
+        # 선택) 1. OMIM ID마다 semantic embedding 생성 -> 모든 term embedding stack함
         result_df = build_omim_semantic_embeddings(
             phenotype_df=phenotype_df,
             hpo_to_vec=hpo_to_vec,
             omim_ids=omim_ids,
         )
     elif POOLING in ["mean", "max"]:
-        # 선택) 4-2. pooling embedding 생성 -> omim id 별로 동일한 차원을 return함
+        # 선택) 2. pooling embedding 생성 -> omim id 별로 동일한 차원을 return함
         result_df = build_omim_pooled_embeddings(
             phenotype_df=phenotype_df,
             hpo_to_vec=hpo_to_vec,
