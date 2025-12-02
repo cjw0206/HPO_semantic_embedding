@@ -76,17 +76,7 @@ def build_omim_semantic_embeddings(
     hpo_to_vec: dict,
     omim_ids: list
 ) -> pd.DataFrame:
-    """
-    주어진 omim_ids 에 대해,
-    phenotype.hpoa 로부터 annotation된 HPO term을 찾고,
-    각 HPO term의 임베딩을 stack 해서 (n_terms, 64) 모양으로 만들어
-    문자열(JSON)로 저장하는 DataFrame을 만든다.
 
-    반환 DataFrame 컬럼:
-        omim_id : OMIM:xxxxx
-        hpo_ids : ["HP:0000001", "HP:0000002", ...]  (JSON 문자열)
-        emb     : [[...64...], [...64...], ...]      (JSON 문자열; (n_terms, 64))
-    """
     rows = []
 
     # phenotype_df: columns = ["database_id", "hpo_id"]
