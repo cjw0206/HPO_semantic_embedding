@@ -36,12 +36,12 @@ pip install node2vec
    - `hpo-terms.edgelist`
 
 4. **`node2vec_library_hpo.py`**  
-   Trains node2vec embeddings using the generated graph.  
+   Trains node2vec embeddings from HPO. Each term has a 64-dimensional embedding.  
    **Output:**
    - `emb/hpo-terms-64.emd`
 
 6. **`generate_hpo_embedding_csv.py`**  
-   Converts trained embeddings into a CSV file.  
+   Converts the node2vec-trained embeddings into a CSV file for mapping.
    **Output:**
    - `hpo_omim_embedding.csv`
 
