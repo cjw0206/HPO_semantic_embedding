@@ -12,6 +12,14 @@ These embeddings capture hierarchical relationships and semantic meaning based o
 
 The code is based on the implementation provided by **TransformerGO**, and it has been refactored to focus specifically on generating semantic embeddings.
 
+## Dependencies
+
+Install the only one package:
+
+```bash
+pip install node2vec
+```
+
 
 ## Execution Order
 
