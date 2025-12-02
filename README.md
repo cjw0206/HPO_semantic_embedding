@@ -15,20 +15,26 @@ The code is based on the implementation provided by **TransformerGO**, and it ha
 
 ## Execution Order
 
-Run the scripts in the following order:
-
 1. **`obo_file_parsing_HPO.py`**  
-   Parses the HPO `.obo` file and converts it into a structured dictionary and CSV.
+   Parses the HPO `.obo` file and converts it into a structured dictionary and CSV.  
+   **Output:** `hp.obo.csv`
 
 2. **`node2vec_embeddings_HPO.py`**  
-   Builds the HPO graph and prepares input data for node2vec.
+   Builds the HPO graph and prepares input data for node2vec.  
+   **Outputs:**  
+   - `hpo_id_dict`  
+   - `hpo-terms.edgelist`
 
 3. **`node2vec_library_hpo.py`**  
-   Trains node2vec embeddings using the generated graph.
+   Trains node2vec embeddings using the generated graph.  
+   **Output:** `emb/hpo-terms-64.emd`
 
 4. **`generate_hpo_embedding_csv.py`**  
-   Converts trained embeddings into a CSV file.
+   Converts trained embeddings into a CSV file.  
+   **Output:** `hpo_omim_embedding.csv`
 
 5. **`generate_semantic_embedding.py`**  
-   Generates semantic embeddings based on the HPO structure.
+   Generates semantic embeddings based on the HPO structure.  
+   **Output:** `omim_semantic_{POOLING}_pool_embeddings.csv`
+
 
