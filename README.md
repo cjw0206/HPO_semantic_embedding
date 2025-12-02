@@ -14,7 +14,7 @@ The code is based on the implementation provided by **TransformerGO**, and it ha
 
 ## Dependencies
 
-Install the only one package:
+Install the only required package:
 
 ```bash
 pip install node2vec
