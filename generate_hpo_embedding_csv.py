@@ -1,7 +1,7 @@
 import pickle
 import pandas as pd
 
-# 파일 경로 설정 (네 환경에 맞게 수정)
+# 파일 경로 설정
 emb_path = "data/emb/hpo-terms-64.emd"   # hpo-terms-64.emd 경로
 id_dict_path = "data/hpo_id_dict"    # hpo_id_dict 경로
 out_csv_path = "data/hpo_omim_embedding.csv"
