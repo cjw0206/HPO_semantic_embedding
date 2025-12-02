@@ -37,13 +37,22 @@ The code is based on the implementation provided by **TransformerGO**, and it ha
    - `hpo_omim_embedding.csv`
 
 8. **`generate_semantic_embedding.py`**  
-   Generates semantic embeddings based on the HPO structure.  
+   Generates semantic embeddings based on the HPO structure.
+
+   **Description**  
    Since semantic embeddings depend on which HPO terms a disease is annotated with,  
    the dimensionality can vary across diseases.  
-   To address this, pooling methods are provided for dimension alignment.  
+   To address this, pooling methods are provided for embedding dimension alignment.  
    The `POOLING` variable supports `['mean', 'max', 'no']`,  
-   corresponding to **mean pooling**, **max pooling**, and **no pooling**, respectively.  
-   **Output:**
+   corresponding to **mean pooling**, **max pooling**, and **no pooling**, respectively.
+
+   **Input**  
+   - `omim_ids.txt` — contains one OMIM ID per line.  
+     If an OMIM ID is missing from HPO annotations or does not exist in the mapping,  
+     the script will print a message indicating that the ID is not found.
+
+   **Output**  
    - `omim_semantic_{POOLING}_pool_embeddings.csv`
+
 
 
