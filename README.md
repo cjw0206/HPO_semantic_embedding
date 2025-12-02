@@ -1,3 +1,14 @@
+## Semantic Embedding Background
+
+This project adapts the semantic embedding approach introduced in the **TransformerGO** paper,  
+where proteins are embedded using annotation signals from the Gene Ontology (GO).
+
+In our case, we apply the same principle to the **Human Phenotype Ontology (HPO)**.  
+Because **diseases act as the annotation source in HPO**, we generate **semantic embeddings for diseases** instead of proteins.  
+These embeddings capture hierarchical relationships and semantic meaning based on HPO structure and annotation patterns.
+
+
+
 ## Execution Order
 
 Run the scripts in the following order:
